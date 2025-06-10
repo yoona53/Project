@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from wordle import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('game/', views.game, name='game'),
 ]
+
