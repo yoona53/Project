@@ -4,11 +4,15 @@ from django.db import models
 
 class Word(models.Model):
     class Meta:
-        db_table = 'word'
+        db_table = 'word_jlpt'
 
-    text = models.CharField(verbose_name='単語', max_length=10)
-    length = models.IntegerField(verbose_name='文字数')
-    active = models.BooleanField(verbose_name='正解可否', default=True)
+    expression = models.CharField(verbose_name='漢字', max_length=10)   # 漢字
+    reading = models.CharField(verbose_name='ひらがな', max_length=10)         # ひらがな
+    # expression = models.CharField(verbose_name='漢字', max_length=10, null=False, blank=True)   # 漢字
+    # reading = models.CharField(verbose_name='ひらがな', max_length=10, null=False, blank=True)         # ひらがな
+    
+    length = models.IntegerField(verbose_name='文字数')                 # 文字数
+    active = models.BooleanField(verbose_name='正解可否', default=True) # 正解可否
 
     def __str__(self):
-        return self.text
+        return f"{self.reading} ({self.expression})"

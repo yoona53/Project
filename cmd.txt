@@ -1,0 +1,2 @@
+# 단어 db에 적재하는 커맨드
+python manage.py load_jlpt --path=jlpt-word-list\out\all.csv
