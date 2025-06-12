@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>日本語ワードル – 結果</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 40px; }
+        .tile {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            font-size: 20px;
+            margin: 2px;
+            border: 1px solid #ccc;
+        }
+
+        .green {
+            background-color: #aaffaa;
+        }
+
+        .yellow {
+            background-color: #ffff99;
+        }
+
+        .gray {
+            background-color: #cccccc;
+        }
+    </style>
+</head>
+
+<body>
+
+    {% if correct %}
+    <h1>🎉 正解！ 🎉</h1>
+    {% else %}
+    <h1>❌ 不正解！</h1>
+    {% endif %}
+
+    <p>漢字：<strong>{{ expression }}</strong></p>
+    <p>答え：<strong>{{ answer }}</strong></p>
+    <h2>これまでの結果</h2>
+    {% for attempt in attempts %}
+    <div>
+        {% for ch, color in attempt %}
+        <div class="tile {{ color }}">{{ ch }}</div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+    <br>
+    <a href="{% url 'wordle:quiz' %}?len={{ answer|length }}">
+        <button>もう一度やる</button>
+    </a>
+</body>
+
+</html>

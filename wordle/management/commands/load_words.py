@@ -1,22 +1,38 @@
-import re
+# wordle/management/commands/import_words.py
 from django.core.management.base import BaseCommand
 from wordle.models import Word
+import pandas as pd
+
+def contains_katakana(text):
+    return any('ァ' <= ch <= 'ヶ' for ch in str(text))
 
 class Command(BaseCommand):
-    help = 'Load 5-6 letter hiragana words from words.txt into DB'
+    help = 'CSV에서 단어 데이터를 불러와 Word 모델에 저장합니다.'
 
-    def handle(self, *args, **kwargs):
+    def add_arguments(self, parser):
+        parser.add_argument('csv_file', type=str, help='CSV 파일 경로')
+    
+    def handle(self, *args, **options):
+        csv_path = options['csv_file']
+        df = pd.read_csv(csv_path)
+
         count = 0
-        with open('word.txt', 'r', encoding='utf-8') as f:
-            for line in f:
-                word = line.strip()
-                # ひらがな5~6文字単語のみフィルタリング
-                if re.fullmatch(r'[ぁ-ん]{5,6}', word):
-                    _, created = Word.objects.get_or_create(
-                        text=word,
-                        length=len(word),
-                        defaults={'active': True}
-                    )
-                    if created:
-                        count += 1
-        self.stdout.write(self.style.SUCCESS(f"{count}個の単語を登録しました。"))
+        for _, row in df.iterrows():
+            expression = row['expression']
+            reading = row['reading']
+            tags = row.get('normalized_tags', '')
+            length = len(str(reading))
+
+            if not expression or not reading or contains_katakana(reading):
+                continue
+
+            Word.objects.create(
+                expression=expression,
+                reading=reading,
+                length=length,
+                active=True,
+                tag=tags
+            )
+            count += 1
+
+        self.stdout.write(self.style.SUCCESS(f'{count}개의 단어가 성공적으로 삽입되었습니다.'))

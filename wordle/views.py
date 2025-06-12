@@ -1,72 +1,106 @@
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from .models import Word
-import random
+from django.db.models import Q
+import random, json, re
+
+def home(request):
+    return render(request, 'wordle/home.html')
+
+def study(request):
+    return render(request, 'wordle/study.html')
+
+MAX_ATTEMPTS = 6
+
+def is_hiragana_only(text):
+    return all('ぁ' <= ch <= 'ん' or ch == 'ー' for ch in text)
 
 def compare_words(answer, guess):
     result = []
-    for i in range(len(guess)):
-        if i < len(answer) and guess[i] == answer[i]:
+    for i, ch in enumerate(guess):
+        if i < len(answer) and ch == answer[i]:
             result.append('green')
-        elif guess[i] in answer:
+        elif ch in answer:
             result.append('yellow')
         else:
             result.append('gray')
     return result
 
-def game(request: HttpRequest):
-    MAX_ATTEMPTS = 6
+def quiz(request):
+    level = request.GET.get('level', 'all')
 
-    # 1) GET 파라미터로 받은 len_type
-    len_type = int(request.GET.get('len', request.session.get('len', 5)))
+    # 퀴즈 리셋 요청 (GET ?reset=1)
+    if request.GET.get("reset") == "1":
+        for key in ['answer', 'expression', 'attempts', 'level']:
+            request.session.pop(key, None)
+        return redirect(f"{request.path}?level={level or request.session.get('level', 'all')}")
 
-    # 2) '새 게임 시작 여부' 판단: 
-    #    - 세션에 저장된 answer가 없거나
-    #    - 이전에 선택했던 길이(request.session['len'])와 다르다면
-    if 'answer' not in request.session or request.session.get('len') != len_type:
-        # DB에서 길이에 맞는 active 단어를 랜덤으로 하나 꺼내서
-        qs = Word.objects.filter(length=len_type, active=True)
+
+    # 새로운 문제 출제
+    if 'answer' not in request.session or request.session.get('level') != level:
+        qs = Word.objects.filter(active=True)
+        if level != 'all':
+            qs = qs.filter(tag__icontains=f'JLPT_N{level[-1]}')
+
         word = qs.order_by('?').first()
+
         if not word:
-            return render(request, 'wordle/game.html', {
-                'error': f"{len_type}글자 단어가 없습니다.",
-            })
-        # 세션 초기화
-        request.session['answer'] = word.text
-        request.session['len'] = len_type
+            return render(request, 'wordle/quiz.html', {'error': f'{level} の単語が見つかりません。'})
+        
+        request.session['answer'] = word.reading
+        request.session['expression'] = word.expression
         request.session['attempts'] = []
+        request.session['level'] = level
 
-    answer   = request.session['answer']
+    answer = request.session.get('answer')
+    expression = request.session.get('expression')
     attempts = request.session.get('attempts', [])
-    error    = None
+    error = None
+    print(expression)
+    print(answer)
 
-    # 3) POST 요청 처리
     if request.method == 'POST':
         guess = request.POST.get('guess', '').strip()
 
-        # 길이 검증
-        if len(guess) != len_type:
-            error = f"{len_type}文字の単語を入力してください。"
-        # 남은 횟수 초과 검증
+        if not is_hiragana_only(guess):
+            error = "ひらがなで入力してください。"
+        elif len(guess) != len(answer):
+            error = f"{len(answer)}文字のひらがなを入力してください。"
         elif len(attempts) >= MAX_ATTEMPTS:
             error = "もう試行回数を使い切りました。"
         else:
             colors = compare_words(answer, guess)
-            # (char, color) 튜플 리스트를 시도 기록에 추가
             attempts.append(list(zip(guess, colors)))
             request.session['attempts'] = attempts
 
-            # 정답 맞추면 결과 페이지로
             if guess == answer:
-                return render(request, 'wordle/result.html', {
+                context = {
                     'correct': True,
+                    'expression': expression,
                     'answer': answer,
-                })
+                    'attempts': attempts,
+                }
+                for key in ['answer', 'expression', 'attempts']:
+                    request.session.pop(key, None)
+                return render(request, 'wordle/result.html', context)
 
-    # 4) 템플릿에 보낼 컨텍스트
-    return render(request, 'wordle/game.html', {
+            elif len(attempts) >= MAX_ATTEMPTS:
+                context = {
+                    'correct': False,
+                    'expression': expression,
+                    'answer': answer,
+                    'attempts': attempts,
+                }
+                for key in ['answer', 'expression', 'attempts']:
+                    request.session.pop(key, None)
+                return render(request, 'wordle/result.html', context)
+
+    return render(request, 'wordle/quiz.html', {
+        'expression': expression,
+        'answer': answer,  # hidden input으로 전달
         'attempts': attempts,
-        'error': error,
+        'attempts_json': json.dumps(attempts, ensure_ascii=False),
         'remaining': MAX_ATTEMPTS - len(attempts),
-        'len': len_type,
+        'error': error,
+        'level': level,
     })

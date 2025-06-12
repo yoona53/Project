@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>JLPTワードル</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 40px; }
+    .tile {
+      display: inline-block;
+      width: 40px; height: 40px;
+      line-height: 40px; font-size: 20px;
+      margin: 2px; border: 1px solid #ccc;
+    }
+    .green { background-color: #aaffaa; }
+    .yellow { background-color: #ffff99; }
+    .gray { background-color: #cccccc; }
+    .hint-word { font-size: 24px; margin-bottom: 20px;}
+    .error { color: red; }
+    .button-area { margin-top: 20px; }
+    #kanji-div { display: none; }
+    
+    .level-button {
+      padding: 6px 14px;
+      margin: 4px;
+      border: 1px solid #888;
+      border-radius: 6px;
+      background-color: #f2f2f2;
+      text-decoration: none;
+      color: black;
+    }
+    .level-button.active {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+    }
+    
+  </style>
+  <script>
+    function btnClick(){
+      const hint = document.getElementById('kanji-div');
+      const button = document.getElementById('kanji-button');
+
+      const isHidden = window.getComputedStyle(hint).display === 'none';
+
+      if(isHidden){
+        hint.style.display = 'block';
+        button.textContent = '漢字ヒントを非表示';
+      }else{
+        hint.style.display = 'none';
+        button.textContent = '漢字ヒントを表示';
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>JLPTワードル</h1>
+  <div class="level-buttons">
+  <a href="{% url 'wordle:quiz' %}?level=all" class="level-button {% if level == 'all' %}active{% endif %}"><button>All</button></a>
+  <a href="{% url 'wordle:quiz' %}?level=n1" class="level-button {% if level == 'n1' %}active{% endif %}"><button>N1</button></a>
+  <a href="{% url 'wordle:quiz' %}?level=n2" class="level-button {% if level == 'n2' %}active{% endif %}"><button>N2</button></a>
+  <a href="{% url 'wordle:quiz' %}?level=n3" class="level-button {% if level == 'n3' %}active{% endif %}"><button>N3</button></a>
+  <a href="{% url 'wordle:quiz' %}?level=n4" class="level-button {% if level == 'n4' %}active{% endif %}"><button>N4</button></a>
+  <a href="{% url 'wordle:quiz' %}?level=n5" class="level-button {% if level == 'n5' %}active{% endif %}"><button>N5</button></a>
+</div>
+<hr/>
+  <!-- 漢字ヒント -->
+  <button id="kanji-button" onclick="btnClick()">漢字ヒントを表示</button>
+  <div id="kanji-div" class="hint-word">漢字：<strong>{{ expression }}</strong></div>
+  <p>ひらがな <strong>{{ answer | length }}</strong>文字</p>
+  <p>残り <strong>{{ remaining }}</strong> 回</p>
+
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
+  {% if remaining > 0 %}
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="answer" value="{{ answer }}">
+      <input type="hidden" name="expression" value="{{ expression }}">
+      <input type="hidden" name="attempts" value='{{ attempts_json|escapejs }}'>
+
+      <input type="text" name="guess" placeholder="ひらがなで入力" required autofocus>
+      <button type="submit">送信</button>
+    </form>
+  {% else %}
+    <p>試行回数を使い切りました。正解は「{{ answer }}」です。</p>
+  {% endif %}
+
+  <h2>これまでの試行</h2>
+  {% for attempt in attempts %}
+    <div>
+      {% for ch, color in attempt %}
+        <div class="tile {{ color }}">{{ ch }}</div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+  <div class="button-area">
+    <a href="{% url 'wordle:quiz' %}?reset=1&level={{ level }}"><button>もう一度</button></a>
+
+    <a href="{% url 'wordle:home' %}"><button>ホームへ</button></a>
+  </div>
+</body>
+</html>
