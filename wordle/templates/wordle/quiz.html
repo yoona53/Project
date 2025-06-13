@@ -97,9 +97,8 @@
   {% endfor %}
 
   <div class="button-area">
-    <a href="{% url 'wordle:quiz' %}?reset=1&level={{ level }}"><button>もう一度</button></a>
-
-    <a href="{% url 'wordle:home' %}"><button>ホームへ</button></a>
+    <button><a href="{% url 'wordle:quiz' %}?len={{ answer|length }}">もう一度</a></button>
+    <button><a href="{% url 'wordle:home' %}">ホームへ</a></button>
   </div>
 </body>
 </html>

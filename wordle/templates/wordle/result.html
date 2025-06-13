@@ -51,9 +51,9 @@
     {% endfor %}
 
     <br>
-    <a href="{% url 'wordle:quiz' %}?len={{ answer|length }}">
-        <button>もう一度</button>
-    </a>
+    
+    <button><a href="{% url 'wordle:quiz' %}?len={{ answer|length }}">もう一度</a></button>
+    <button><a href="{% url 'wordle:home' %}">ホームへ</a></button>
 </body>
 
 </html>
