@@ -33,6 +33,10 @@
       color: white;
       font-weight: bold;
     }
+
+    .level-button.active a{
+      color: white;
+    }
     
   </style>
   <script>
@@ -55,12 +59,12 @@
 <body>
   <h1>JLPTワードル</h1>
   <div class="level-buttons">
-  <a href="{% url 'wordle:quiz' %}?level=all" class="level-button {% if level == 'all' %}active{% endif %}"><button>All</button></a>
-  <a href="{% url 'wordle:quiz' %}?level=n1" class="level-button {% if level == 'n1' %}active{% endif %}"><button>N1</button></a>
-  <a href="{% url 'wordle:quiz' %}?level=n2" class="level-button {% if level == 'n2' %}active{% endif %}"><button>N2</button></a>
-  <a href="{% url 'wordle:quiz' %}?level=n3" class="level-button {% if level == 'n3' %}active{% endif %}"><button>N3</button></a>
-  <a href="{% url 'wordle:quiz' %}?level=n4" class="level-button {% if level == 'n4' %}active{% endif %}"><button>N4</button></a>
-  <a href="{% url 'wordle:quiz' %}?level=n5" class="level-button {% if level == 'n5' %}active{% endif %}"><button>N5</button></a>
+  <button class="level-button {% if level == 'all' %}active{% endif %}"><a href="{% url 'wordle:quiz' %}?reset=1&level=all">All</a></button>
+  <button class="level-button {% if level == 'n1' %}active{% endif %}"><a href="{% url 'wordle:quiz' %}?reset=1&level=n1">N1</a></button>
+  <button class="level-button {% if level == 'n2' %}active{% endif %}"><a href="{% url 'wordle:quiz' %}?reset=1&level=n2">N2</a></button>
+  <button class="level-button {% if level == 'n3' %}active{% endif %}"><a href="{% url 'wordle:quiz' %}?reset=1&level=n3">N3</a></button>
+  <button class="level-button {% if level == 'n4' %}active{% endif %}"><a href="{% url 'wordle:quiz' %}?reset=1&level=n4">N4</a></button>
+  <button class="level-button {% if level == 'n5' %}active{% endif %}"><a href="{% url 'wordle:quiz' %}?reset=1&level=n5">N5</a></button>
 </div>
 <hr/>
   <!-- 漢字ヒント -->
@@ -76,10 +80,6 @@
   {% if remaining > 0 %}
     <form method="POST">
       {% csrf_token %}
-      <input type="hidden" name="answer" value="{{ answer }}">
-      <input type="hidden" name="expression" value="{{ expression }}">
-      <input type="hidden" name="attempts" value='{{ attempts_json|escapejs }}'>
-
       <input type="text" name="guess" placeholder="ひらがなで入力" required autofocus>
       <button type="submit">送信</button>
     </form>

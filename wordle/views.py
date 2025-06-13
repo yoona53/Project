@@ -29,24 +29,30 @@ def compare_words(answer, guess):
 def quiz(request):
     level = request.GET.get('level', 'all')
 
-    # 퀴즈 리셋 요청 (GET ?reset=1)
+    # クイズリセット (GET ?reset=1)
     if request.GET.get("reset") == "1":
         for key in ['answer', 'expression', 'attempts', 'level']:
             request.session.pop(key, None)
+        request.session['level'] = level
         return redirect(f"{request.path}?level={level or request.session.get('level', 'all')}")
 
 
     # 새로운 문제 출제
     if 'answer' not in request.session or request.session.get('level') != level:
         qs = Word.objects.filter(active=True)
-        if level != 'all':
-            qs = qs.filter(tag__icontains=f'JLPT_N{level[-1]}')
+
+        # level から数字を抽出
+        match = re.search(r'\d+', level)
+        if match:
+            number = match.group()
+            qs = qs.filter(tag__icontains=number)
 
         word = qs.order_by('?').first()
 
         if not word:
             return render(request, 'wordle/quiz.html', {'error': f'{level} の単語が見つかりません。'})
         
+        # session save
         request.session['answer'] = word.reading
         request.session['expression'] = word.expression
         request.session['attempts'] = []
