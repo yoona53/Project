@@ -15,18 +15,35 @@
             font-size: 20px;
             margin: 2px;
             border: 1px solid #ccc;
+            color:#eee;
+            font-weight: bold;
         }
 
         .green {
-            background-color: #aaffaa;
+            background-color: #22c55e;
         }
 
         .yellow {
-            background-color: #ffff99;
+            background-color: #eab308;
         }
 
         .gray {
-            background-color: #cccccc;
+            background-color: #94a3b8;
+        }
+
+        .a-button {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 6px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .a-button:hover{
+            background-color: #ddd;
         }
     </style>
 </head>
@@ -52,8 +69,8 @@
 
     <br>
     
-    <button><a href="{% url 'wordle:quiz' %}?len={{ answer|length }}">もう一度</a></button>
-    <button><a href="{% url 'wordle:home' %}">ホームへ</a></button>
+    <a href="{% url 'wordle:quiz' %}?reset=1&level={{ level }}" class="a-button">もう一度</a>
+    <a href="{% url 'wordle:home' %}" class="a-button">ホームへ</a>
 </body>
 
 </html>

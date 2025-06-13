@@ -1,8 +1,10 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from .models import Word
 from django.db.models import Q
 import random, json, re
+
 
 def home(request):
     return render(request, 'wordle/home.html')
@@ -37,7 +39,7 @@ def quiz(request):
         return redirect(f"{request.path}?level={level or request.session.get('level', 'all')}")
 
 
-    # 새로운 문제 출제
+    # 新しい問題（リセット）
     if 'answer' not in request.session or request.session.get('level') != level:
         qs = Word.objects.filter(active=True)
 
@@ -103,10 +105,43 @@ def quiz(request):
 
     return render(request, 'wordle/quiz.html', {
         'expression': expression,
-        'answer': answer,  # hidden input으로 전달
+        'answer': answer,
         'attempts': attempts,
         'attempts_json': json.dumps(attempts, ensure_ascii=False),
         'remaining': MAX_ATTEMPTS - len(attempts),
         'error': error,
         'level': level,
     })
+
+def study(request):
+    view_mode = request.GET.get('view', 'list')
+    level = request.GET.get('level', 'all')
+    query = request.GET.get('q', '')
+    page = int(request.GET.get('page', 1))
+
+    words = Word.objects.filter(active=True)
+
+    match = re.search(r'\d+', level)
+    
+    if match:
+        number = match.group()
+        words = words.filter(tag__icontains=number)
+
+    if query:
+        words = words.filter(Q(expression__icontains=query) | Q(reading__icontains=query))
+
+    if view_mode == 'card':
+        paginator = Paginator(words.order_by('expression'), 1)
+    else:
+        paginator = Paginator(words.order_by('expression'), 20)
+
+    page_obj = paginator.get_page(page)
+
+    context = {
+        'view_mode': view_mode,
+        'page_obj': page_obj,
+        'level': level,
+        'query': query,
+    }
+
+    return render(request, 'wordle/study.html', context)

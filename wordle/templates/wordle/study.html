@@ -1,52 +1,178 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8">
-  <title>漢字勉強ページ</title>
+    <meta charset="UTF-8">
+    <title>語彙勉強ページ</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .a-button {
+            /* display: inline-block; */
+            padding: 3px 10px;
+            margin: 6px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .a-button:hover {
+            background-color: #ddd;
+        }
+
+        .page-button {
+            display: inline-block;
+            padding: 2px 8px;
+            margin: 6px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .page-button:hover {
+            background-color: #ddd;
+        }
+
+        button:hover {
+            background-color: #ddd;
+        }
+
+        table {
+            margin-top: 20px;
+            width: 80%;
+            table-layout: fixed;
+            margin: auto;
+        }
+    </style>
+    <script>
+        function resetForm() {
+            const form = document.querySelector('form');
+            form.querySelector('input[name="q"]').value = '';
+            form.querySelector('select[name="level"]').value = 'all';
+            form.submit();
+        }
+
+        // function toggleMode() {
+        //     const table = document.getElementById("table-mode");
+        //     const card = document.getElementById("card-mode");
+        //     const btn = document.getElementById("mode-toggle-btn");
+
+        //     if (card.style.display === "none") {
+        //         table.style.display = "none";
+        //         card.style.display = "block";
+        //         btn.textContent = "テーブルモードに切り替え"
+        //     } else {
+        //         table.style.display = "block";
+        //         card.style.display = "none";
+        //         btn.textContent = "カードモードに切り替え";
+        //     }
+        // }
+
+        // function showAnswer(button) {
+        //     const card = button.closest('.card');
+        //     const answer = document.getElementById("answer");
+
+        //     const isHidden = window.getComputedStyle(answer).display === 'none';
+
+        //     if(isHidden){
+        //         card.querySelector('.reading').style.display = 'block';
+        //         card.querySelector('.meaning').style.display = 'block';
+        //     } else {
+        //         card.querySelector('.reading').style.display = 'none';
+        //         card.querySelector('.meaning').style.display = 'none';
+        //     }
+   
+        // }
+
+    </script>
 </head>
+
 <body>
-  <h1>漢字勉強ページ</h1>
+    <h1>語彙勉強ページ</h1>
 
-  <form method="get">
-    <input type="text" name="q" placeholder="単語検索" value="{{ query }}">
-    <select name="level">
-      <option value="all" {% if level == 'all' %}selected{% endif %}>All</option>
-      <option value="n1" {% if level == 'n1' %}selected{% endif %}>N1</option>
-      <option value="n2" {% if level == 'n2' %}selected{% endif %}>N2</option>
-      <option value="n3" {% if level == 'n3' %}selected{% endif %}>N3</option>
-      <option value="n4" {% if level == 'n4' %}selected{% endif %}>N4</option>
-      <option value="n5" {% if level == 'n5' %}selected{% endif %}>N5</option>
-    </select>
-    <button type="submit">検索</button>
-  </form>
+    <form method="get">
+        <input type="text" name="q" placeholder="単語検索" value="{{ query }}">
+        <select name="level" onchange="this.form.submit()">
+            <option value="all" {% if level == 'all' %}selected{% endif %}>All</option>
+            <option value="n1" {% if level == 'n1' %}selected{% endif %}>N1</option>
+            <option value="n2" {% if level == 'n2' %}selected{% endif %}>N2</option>
+            <option value="n3" {% if level == 'n3' %}selected{% endif %}>N3</option>
+            <option value="n4" {% if level == 'n4' %}selected{% endif %}>N4</option>
+            <option value="n5" {% if level == 'n5' %}selected{% endif %}>N5</option>
+        </select>
+        <button type="submit">検索</button>
+        <button type="button" onclick="resetForm()">クリア</button>
+    </form>
+    <hr />
+    <!-- <button onclick="toggleMode()" id="mode-toggle-btn">カードモードに切り替え</button> -->
+    
+    <div id="table-mode">
+        <div>
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&level={{ level }}&q={{ query }}" class="page-button">前へ</a>
+            {% endif %}
+                <span>ページ {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&level={{ level }}&q={{ query }}" class="page-button">次へ</a>
+            {% endif %}
+        </div>
+        <table border="1" cellpadding="8">
+            <tr>
+                <th>漢字</th>
+                <th>ひらがな</th>
+                <th>意味</th>
+                <th>レベル</th>
+            </tr>
+            {% for word in page_obj %}
+            <tr>
+                <td>{{ word.expression }}</td>
+                <td>{{ word.reading }}</td>
+                <td>{{ word.meaning }}</td>
+                <td style="word-break: break-word;">{{ word.tag }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div>
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&level={{ level }}&q={{ query }}" class="page-button">前へ</a>
+            {% endif %}
+                <span>ページ {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&level={{ level }}&q={{ query }}" class="page-button">次へ</a>
+            {% endif %}
+        </div>
+    </div>
+<!-- 
+    <div id="card-mode" style="display: none;">
+        {% if page_obj|length > 0 %}
+        {% with word=page_obj.0 %}
+        <div class="card">
+            <div class="hint"><strong>{{ word.expression }}</strong></div>
+            <div id="answer">
+                <div class="reading" style="display: none;">ひらがな：{{ word.reading }}</div>
+                <div class="meaning" style="display: none;">意味：{{ word.meaning }}</div>
+            </div>
+            <button onclick="showAnswer(this)">答えを見る</button>
+        </div>
+        {% endwith %}
+        {% else %}
+        <p>単語が見つかりません。</p>
+        {% endif %}
+    </div> 
+-->
 
-  <table border="1" cellpadding="8" style="margin-top: 20px;">
-    <tr>
-      <th>漢字</th>
-      <th>ひらがな</th>
-      <th>意味</th>
-    </tr>
-    {% for word in page_obj %}
-    <tr>
-      <td>{{ word.expression }}</td>
-      <td>{{ word.reading }}</td>
-      <td>{{ word.meaning }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-
-  <div>
-    {% if page_obj.has_previous %}
-      <a href="?page={{ page_obj.previous_page_number }}&level={{ level }}&q={{ query }}">前へ</a>
-    {% endif %}
-    <span>ページ {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}&level={{ level }}&q={{ query }}">次へ</a>
-    {% endif %}
-  </div>
-
-  <div style="margin-top: 20px;">
-    <button><a href="{% url 'wordle:quiz' %}" style="font-weight:bold;">ワードルへ</a></button>
-  </div>
+    <div style="margin-top: 20px;">
+        <a href="{% url 'wordle:home' %}" class="a-button">ホームへ</a>
+        <a href="{% url 'wordle:quiz' %}" class="a-button">ワードルへ</a>
+    </div>
 </body>
+
 </html>

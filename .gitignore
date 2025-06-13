@@ -10,3 +10,6 @@ __pycache__/
 
 # VS Code 설정
 .vscode/
+
+# csv 무시
+*.csv

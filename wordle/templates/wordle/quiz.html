@@ -10,21 +10,23 @@
       width: 40px; height: 40px;
       line-height: 40px; font-size: 20px;
       margin: 2px; border: 1px solid #ccc;
+      color:#eee;
+      font-weight: bold;
     }
-    .green { background-color: #aaffaa; }
-    .yellow { background-color: #ffff99; }
-    .gray { background-color: #cccccc; }
+    .green { background-color: #22c55e; }
+    .yellow { background-color: #eab308; }
+    .gray { background-color: #94a3b8; }
     .hint-word { font-size: 24px; margin-bottom: 20px;}
     .error { color: red; }
     .button-area { margin-top: 20px; }
     #kanji-div { display: none; }
     
     .level-button {
-      padding: 6px 14px;
+      padding: 3px 10px;
       margin: 4px;
-      border: 1px solid #888;
+      border: 1px solid #ccc;
       border-radius: 6px;
-      background-color: #f2f2f2;
+      background-color: #eee;
       text-decoration: none;
       color: black;
     }
@@ -33,9 +35,13 @@
       color: white;
       font-weight: bold;
     }
+    
+    .level-button:hover {
+      background-color: #ddd;
+    }
 
-    .level-button.active a{
-      color: white;
+    button:hover {
+        background-color: #ddd;
     }
     
   </style>
@@ -59,12 +65,12 @@
 <body>
   <h1>JLPTワードル</h1>
   <div class="level-buttons">
-  <button class="level-button {% if level == 'all' %}active{% endif %}"><a href="{% url 'wordle:quiz' %}?reset=1&level=all">All</a></button>
-  <button class="level-button {% if level == 'n1' %}active{% endif %}"><a href="{% url 'wordle:quiz' %}?reset=1&level=n1">N1</a></button>
-  <button class="level-button {% if level == 'n2' %}active{% endif %}"><a href="{% url 'wordle:quiz' %}?reset=1&level=n2">N2</a></button>
-  <button class="level-button {% if level == 'n3' %}active{% endif %}"><a href="{% url 'wordle:quiz' %}?reset=1&level=n3">N3</a></button>
-  <button class="level-button {% if level == 'n4' %}active{% endif %}"><a href="{% url 'wordle:quiz' %}?reset=1&level=n4">N4</a></button>
-  <button class="level-button {% if level == 'n5' %}active{% endif %}"><a href="{% url 'wordle:quiz' %}?reset=1&level=n5">N5</a></button>
+  <a href="{% url 'wordle:quiz' %}?reset=1&level=all" class="level-button {% if level == 'all' %}active{% endif %}">All</a>
+  <a href="{% url 'wordle:quiz' %}?reset=1&level=n1" class="level-button {% if level == 'n1' %}active{% endif %}">N1</a>
+  <a href="{% url 'wordle:quiz' %}?reset=1&level=n2" class="level-button {% if level == 'n2' %}active{% endif %}">N2</a>
+  <a href="{% url 'wordle:quiz' %}?reset=1&level=n3" class="level-button {% if level == 'n3' %}active{% endif %}">N3</a>
+  <a href="{% url 'wordle:quiz' %}?reset=1&level=n4" class="level-button {% if level == 'n4' %}active{% endif %}">N4</a>
+  <a href="{% url 'wordle:quiz' %}?reset=1&level=n5" class="level-button {% if level == 'n5' %}active{% endif %}">N5</a>
 </div>
 <hr/>
   <!-- 漢字ヒント -->
@@ -97,8 +103,9 @@
   {% endfor %}
 
   <div class="button-area">
-    <button><a href="{% url 'wordle:quiz' %}?len={{ answer|length }}">もう一度</a></button>
-    <button><a href="{% url 'wordle:home' %}">ホームへ</a></button>
+    <a href="{% url 'wordle:quiz' %}?reset=1&level={{ level }}" class="level-button">もう一度</a>
+    <a href="{% url 'wordle:home' %}" class="level-button">ホームへ</a>
+    <a href="{% url 'wordle:study' %}" class="level-button">勉強へ</a>
   </div>
 </body>
 </html>
