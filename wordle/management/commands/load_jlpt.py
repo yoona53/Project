@@ -20,7 +20,8 @@ class Command(BaseCommand):
         for _, row in df.iterrows():
             expression = row['expression']
             reading = row['reading']
-            tags = row.get('normalized_tags', '')
+            meaning = row.get('meaning', '')
+            tags = row.get('normalized_tags', '')            
             length = len(str(reading))
 
             if not expression or not reading or contains_katakana(reading):
@@ -29,6 +30,7 @@ class Command(BaseCommand):
             Word.objects.create(
                 expression=expression,
                 reading=reading,
+                meaning=meaning,
                 length=length,
                 active=True,
                 tag=tags
