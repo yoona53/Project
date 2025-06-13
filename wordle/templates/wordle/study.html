@@ -1,11 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>漢字勉強ページ</title>
 </head>
 <body>
-    <h1>Study Page</h1>
+  <h1>漢字勉強ページ</h1>
+
+  <form method="get">
+    <input type="text" name="q" placeholder="単語検索" value="{{ query }}">
+    <select name="level">
+      <option value="all" {% if level == 'all' %}selected{% endif %}>All</option>
+      <option value="n1" {% if level == 'n1' %}selected{% endif %}>N1</option>
+      <option value="n2" {% if level == 'n2' %}selected{% endif %}>N2</option>
+      <option value="n3" {% if level == 'n3' %}selected{% endif %}>N3</option>
+      <option value="n4" {% if level == 'n4' %}selected{% endif %}>N4</option>
+      <option value="n5" {% if level == 'n5' %}selected{% endif %}>N5</option>
+    </select>
+    <button type="submit">検索</button>
+  </form>
+
+  <table border="1" cellpadding="8" style="margin-top: 20px;">
+    <tr>
+      <th>漢字</th>
+      <th>ひらがな</th>
+      <th>意味</th>
+    </tr>
+    {% for word in page_obj %}
+    <tr>
+      <td>{{ word.expression }}</td>
+      <td>{{ word.reading }}</td>
+      <td>{{ word.meaning }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <div>
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}&level={{ level }}&q={{ query }}">前へ</a>
+    {% endif %}
+    <span>ページ {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}&level={{ level }}&q={{ query }}">次へ</a>
+    {% endif %}
+  </div>
+
+  <div style="margin-top: 20px;">
+    <button><a href="{% url 'wordle:quiz' %}" style="font-weight:bold;">ワードルへ</a></button>
+  </div>
 </body>
 </html>
