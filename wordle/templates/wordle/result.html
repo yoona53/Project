@@ -1,51 +1,13 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="ja">
 
 <head>
     <meta charset="UTF-8">
-    <title>日本語ワードル – 結果</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; padding: 40px; }
-        .tile {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            line-height: 40px;
-            font-size: 20px;
-            margin: 2px;
-            border: 1px solid #ccc;
-            color:#eee;
-            font-weight: bold;
-        }
+    <title>JLPTワードル – 結果</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/quiz.css' %}">
 
-        .green {
-            background-color: #22c55e;
-        }
-
-        .yellow {
-            background-color: #eab308;
-        }
-
-        .gray {
-            background-color: #94a3b8;
-        }
-
-        .a-button {
-            display: inline-block;
-            padding: 8px 16px;
-            margin: 6px;
-            background-color: #eee;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            text-decoration: none;
-            color: black;
-        }
-
-        .a-button:hover{
-            background-color: #ddd;
-        }
-    </style>
 </head>
 
 <body>

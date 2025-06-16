@@ -1,16 +1,11 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="ja">
 
 <head>
     <meta charset="UTF-8">
     <title>語彙勉強ページ</title>
     <style>
-        body {
-            font-family: sans-serif;
-            text-align: center;
-            padding: 40px;
-        }
-
         .a-button {
             /* display: inline-block; */
             padding: 3px 10px;
@@ -84,38 +79,6 @@
             });
         }
 
-        // function toggleMode() {
-        //     const table = document.getElementById("table-mode");
-        //     const card = document.getElementById("card-mode");
-        //     const btn = document.getElementById("mode-toggle-btn");
-
-        //     if (card.style.display === "none") {
-        //         table.style.display = "none";
-        //         card.style.display = "block";
-        //         btn.textContent = "テーブルモードに切り替え"
-        //     } else {
-        //         table.style.display = "block";
-        //         card.style.display = "none";
-        //         btn.textContent = "カードモードに切り替え";
-        //     }
-        // }
-
-        // function showAnswer(button) {
-        //     const card = button.closest('.card');
-        //     const answer = document.getElementById("answer");
-
-        //     const isHidden = window.getComputedStyle(answer).display === 'none';
-
-        //     if(isHidden){
-        //         card.querySelector('.reading').style.display = 'block';
-        //         card.querySelector('.meaning').style.display = 'block';
-        //     } else {
-        //         card.querySelector('.reading').style.display = 'none';
-        //         card.querySelector('.meaning').style.display = 'none';
-        //     }
-   
-        // }
-
     </script>
 </head>
 
@@ -136,16 +99,26 @@
         <button type="button" onclick="resetForm()">クリア</button>
     </form>
     <hr />
-    <!-- <button onclick="toggleMode()" id="mode-toggle-btn">カードモードに切り替え</button> -->
     
     <div id="table-mode">
         <div>
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}&level={{ level }}&q={{ query }}" class="page-button">前へ</a>
+                <a href="?page={{ page_obj.previous_page_number }}&level={{ level }}&q={{ query }}">前へ</a>
             {% endif %}
-                <span>ページ {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <strong style="margin: 0 4px;">{{ num }}</strong>
+                {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+                <a href="?page={{ num }}&level={{ level }}&q={{ query }}">{{ num }}</a>
+                {% elif num == 1 %}
+                <a href="?page=1&level={{ level }}&q={{ query }}">1</a>
+                ...
+                {% elif num == page_obj.paginator.num_pages %}
+                ...<a href="?page={{ num }}&level={{ level }}&q={{ query }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}&level={{ level }}&q={{ query }}" class="page-button">次へ</a>
+                <a href="?page={{ page_obj.next_page_number }}&level={{ level }}&q={{ query }}">次へ</a>
             {% endif %}
         </div>
         <div style="margin: 10px 0;">
@@ -180,32 +153,25 @@
         </table>
         <div>
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}&level={{ level }}&q={{ query }}" class="page-button">前へ</a>
+                <a href="?page={{ page_obj.previous_page_number }}&level={{ level }}&q={{ query }}">前へ</a>
             {% endif %}
-                <span>ページ {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <strong style="margin: 0 4px;">{{ num }}</strong>
+                {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+                <a href="?page={{ num }}&level={{ level }}&q={{ query }}">{{ num }}</a>
+                {% elif num == 1 %}
+                <a href="?page=1&level={{ level }}&q={{ query }}">1</a>
+                ...
+                {% elif num == page_obj.paginator.num_pages %}
+                ...<a href="?page={{ num }}&level={{ level }}&q={{ query }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}&level={{ level }}&q={{ query }}" class="page-button">次へ</a>
+                <a href="?page={{ page_obj.next_page_number }}&level={{ level }}&q={{ query }}">次へ</a>
             {% endif %}
         </div>
     </div>
-<!-- 
-    <div id="card-mode" style="display: none;">
-        {% if page_obj|length > 0 %}
-        {% with word=page_obj.0 %}
-        <div class="card">
-            <div class="hint"><strong>{{ word.expression }}</strong></div>
-            <div id="answer">
-                <div class="reading" style="display: none;">ひらがな：{{ word.reading }}</div>
-                <div class="meaning" style="display: none;">意味：{{ word.meaning }}</div>
-            </div>
-            <button onclick="showAnswer(this)">答えを見る</button>
-        </div>
-        {% endwith %}
-        {% else %}
-        <p>単語が見つかりません。</p>
-        {% endif %}
-    </div> 
--->
 
     <div style="margin-top: 20px;">
         <a href="{% url 'wordle:home' %}" class="a-button">ホームへ</a>
