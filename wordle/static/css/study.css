@@ -1,46 +1,32 @@
-        .a-button {
-            /* display: inline-block; */
-            padding: 3px 10px;
-            margin: 6px;
-            background-color: #eee;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            text-decoration: none;
-            color: black;
-        }
+.a-button {
+    /* display: inline-block; */
+    padding: 3px 10px;
+    margin: 6px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    text-decoration: none;
+    color: black;
+}
 
-        .a-button:hover {
-            background-color: #ddd;
-        }
+.a-button:hover {
+    background-color: #ddd;
+}
 
-        .page-button {
-            display: inline-block;
-            padding: 2px 8px;
-            margin: 6px;
-            background-color: #eee;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            text-decoration: none;
-            color: black;
-        }
+button:hover {
+    background-color: #ddd;
+    }
 
-        .page-button:hover {
-            background-color: #ddd;
-        }
+table {
+    margin-top: 20px;
+    width: 80%;
+    table-layout: fixed;
+    margin: auto;
+}
 
-        button:hover {
-            background-color: #ddd;
-        }
-
-        table {
-            margin-top: 20px;
-            width: 80%;
-            table-layout: fixed;
-            margin: auto;
-        }
-
-        .hidden-text {
-            color: transparent;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5); /* ブラインド */
-            user-select: none;
-        }
+.hidden-text {
+    color: transparent;
+    /* ブラインド */
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    user-select: none;
+}

@@ -1,55 +1,67 @@
-    .tile {
-      display: inline-block;
-      width: 40px; height: 40px;
-      text-align: center;
-      line-height: 40px; font-size: 20px;
-      margin: 2px; border: 1px solid #ccc;
-      color:#eee;
-      font-weight: bold;
-    }
-    .green { background-color: #22c55e; }
-    .yellow { background-color: #eab308; }
-    .gray { background-color: #94a3b8; }
-    .hint-word { font-size: 24px; margin-bottom: 20px;}
-    .error { color: red; }
-    .button-area { margin-top: 20px; }
-    #kanji-div { display: none; }
-    
-    .level-button {
-      padding: 3px 10px;
-      margin: 4px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      background-color: #eee;
-      text-decoration: none;
-      color: black;
-    }
-    .level-button.active {
-      background-color: #007bff;
-      color: white;
-      font-weight: bold;
-    }
-    
-    .level-button:hover {
-      background-color: #ddd;
-    }
+.green {
+	background-color: #22c55e;
+}
 
-    button:hover {
-        background-color: #ddd;
-    }
+.yellow {
+	background-color: #eab308;
+}
 
-    .a-button {
-        display: inline-block;
-        padding: 8px 16px;
-        margin: 6px;
-        background-color: #eee;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        text-decoration: none;
-        color: black;
-    }
+.gray {
+	background-color: #94a3b8;
+}
 
-    .a-button:hover{
-        background-color: #ddd;
-    }
+.hint-word {
+	font-size: 24px;
+	margin-bottom: 20px;
+}
 
+.error {
+	color: red;
+}
+
+.button-area {
+	margin-top: 20px;
+}
+
+#kanji-div {
+	display: none;
+}
+
+.level-button {
+	padding: 3px 10px;
+	margin: 4px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	background-color: #eee;
+	text-decoration: none;
+	color: black;
+}
+
+.level-button.active {
+	background-color: #007bff;
+	color: white;
+	font-weight: bold;
+}
+
+.level-button:hover {
+	background-color: #ddd;
+}
+
+button:hover {
+	background-color: #ddd;
+}
+
+.a-button {
+	display: inline-block;
+	padding: 8px 16px;
+	margin: 6px;
+	background-color: #eee;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	text-decoration: none;
+	color: black;
+}
+
+.a-button:hover {
+	background-color: #ddd;
+}
