@@ -5,4 +5,6 @@ pip install -r requirements.txt
 
 python manage.py makemigrations
 python manage.py migrate
-python manage.py load_jlpt jlpt-word-list\out\all.csv
+
+# download all.csv 
+python manage.py load_jlpt all.csv
