@@ -30,6 +30,7 @@
     {% endfor %}
 
     <br>
+    <hr />
     
     <a href="{% url 'wordle:quiz' %}?reset=1&level={{ level }}" class="a-button">もう一度</a>
     <a href="{% url 'wordle:home' %}" class="a-button">ホームへ</a>

@@ -5,54 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <title>語彙勉強ページ</title>
-    <style>
-        .a-button {
-            /* display: inline-block; */
-            padding: 3px 10px;
-            margin: 6px;
-            background-color: #eee;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            text-decoration: none;
-            color: black;
-        }
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/study.css' %}">
 
-        .a-button:hover {
-            background-color: #ddd;
-        }
-
-        .page-button {
-            display: inline-block;
-            padding: 2px 8px;
-            margin: 6px;
-            background-color: #eee;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            text-decoration: none;
-            color: black;
-        }
-
-        .page-button:hover {
-            background-color: #ddd;
-        }
-
-        button:hover {
-            background-color: #ddd;
-        }
-
-        table {
-            margin-top: 20px;
-            width: 80%;
-            table-layout: fixed;
-            margin: auto;
-        }
-
-        .hidden-text {
-            color: transparent;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5); /* 모자이크 느낌 */
-            user-select: none;
-        }
-    </style>
     <script>
         function resetForm() {
             const form = document.querySelector('form');
@@ -172,6 +127,8 @@
             {% endif %}
         </div>
     </div>
+    
+    <hr />
 
     <div style="margin-top: 20px;">
         <a href="{% url 'wordle:home' %}" class="a-button">ホームへ</a>

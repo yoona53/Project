@@ -2,7 +2,7 @@
 py -3.8 -m venv venv
 .\venv\Scripts\activate
 pip install -r requirements.txt
-pip install pandas
+
 python manage.py makemigrations
 python manage.py migrate
 python manage.py load_jlpt jlpt-word-list\out\all.csv
