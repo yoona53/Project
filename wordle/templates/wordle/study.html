@@ -51,6 +51,12 @@
             table-layout: fixed;
             margin: auto;
         }
+
+        .hidden-text {
+            color: transparent;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5); /* 모자이크 느낌 */
+            user-select: none;
+        }
     </style>
     <script>
         function resetForm() {
@@ -58,6 +64,24 @@
             form.querySelector('input[name="q"]').value = '';
             form.querySelector('select[name="level"]').value = 'all';
             form.submit();
+        }
+
+        function toggleColumn(className) {
+            const cells = document.querySelectorAll('.' + className);
+            cells.forEach(cell => {
+                cell.style.display = (cell.style.display === 'none') ? '' : 'none';
+            });
+        }
+
+        function toggleContent(className) {
+            const cells = document.querySelectorAll('.' + className);
+            cells.forEach(cell => {
+            if (cell.classList.contains('hidden-text')) {
+                cell.classList.remove('hidden-text');
+            } else {
+                cell.classList.add('hidden-text');
+            }
+            });
         }
 
         // function toggleMode() {
@@ -124,19 +148,33 @@
                 <a href="?page={{ page_obj.next_page_number }}&level={{ level }}&q={{ query }}" class="page-button">次へ</a>
             {% endif %}
         </div>
+        <div style="margin: 10px 0;">
+            行をブラインドする：
+            <label><input type="checkbox" checked onclick="toggleContent('col-kanji')"> 漢字</label>
+            <label><input type="checkbox" checked onclick="toggleContent('col-reading')"> ひらがな</label>
+            <label><input type="checkbox" checked onclick="toggleContent('col-meaning')"> 意味</label>
+            <label><input type="checkbox" checked onclick="toggleContent('col-level')"> レベル</label>
+        </div>
+        <div style="margin: 10px 0;">
+            行を消す・表す：
+            <label><input type="checkbox" checked onclick="toggleColumn('col-kanji')"> 漢字</label>
+            <label><input type="checkbox" checked onclick="toggleColumn('col-reading')"> ひらがな</label>
+            <label><input type="checkbox" checked onclick="toggleColumn('col-meaning')"> 意味</label>
+            <label><input type="checkbox" checked onclick="toggleColumn('col-level')"> レベル</label>
+        </div>
         <table border="1" cellpadding="8">
             <tr>
-                <th>漢字</th>
-                <th>ひらがな</th>
-                <th>意味</th>
-                <th>レベル</th>
+                <th class="col-kanji">漢字</th>
+                <th class="col-reading">ひらがな</th>
+                <th class="col-meaning">意味</th>
+                <th class="col-level">レベル</th>
             </tr>
             {% for word in page_obj %}
             <tr>
-                <td>{{ word.expression }}</td>
-                <td>{{ word.reading }}</td>
-                <td>{{ word.meaning }}</td>
-                <td style="word-break: break-word;">{{ word.tags }}</td>
+                <td class="col-kanji">{{ word.expression }}</td>
+                <td class="col-reading">{{ word.reading }}</td>
+                <td class="col-meaning">{{ word.meaning }}</td>
+                <td class="col-level" style="word-break: break-word;">{{ word.tags }}</td>
             </tr>
             {% endfor %}
         </table>
