@@ -4,13 +4,43 @@
 <head>
   <meta charset="UTF-8">
   <title>JLPTワードル</title>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'css/quiz.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/quiz.css' %}">
+  <link rel="stylesheet" href="{% static 'css/modal.css' %}">
 
   <script src="{% static 'js/quiz.js' %}"></script>
 </head>
 <body>
   <h1>JLPTワードル</h1>
+
+  <button id="howto-btn">❓</button>
+  <!-- 遊び方説明モーダル -->
+<div id="howto-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h2>ワードルの遊び方</h2>
+    <ul style="text-align: left; font-size: 14px;">
+      <li>JLPT試験に出る日本語単語を当てるゲームです。</li>
+      <li>提示された文字数を見て答えを想像して日本語を入力してください。</li>
+      <li>答えに文字が含まれると文字が
+        <span style="background-color: #eab308; color: white;">黄色</span>
+        に、文字の場所も一致すると文字が<span style="background-color: #22c55e; color: white;">緑色</span>
+        になります。
+      </li>
+      <li>それらのヒントをもとに答えを当ててください。</li>
+      <li>全部で6回までチャレンジできます。</li>
+      <li>入力は必ず
+        <span style="background-color: #007bff; color: white;">ひらがな</span>
+        で、提示された
+        <span style="background-color: #007bff; color: white;">文字数に合わせて</span>
+        入力してください。
+      </li>
+      <li>同じ読み方の単語が複数ある場合もあります。</li>
+    </ul>
+  </div>
+</div>
+<hr/>
+
   <div class="level-buttons">
   <a href="{% url 'wordle:quiz' %}?reset=1&level=all" class="level-button {% if level == 'all' %}active{% endif %}">All</a>
   <a href="{% url 'wordle:quiz' %}?reset=1&level=n1" class="level-button {% if level == 'n1' %}active{% endif %}">N1</a>
@@ -56,5 +86,7 @@
     <a href="{% url 'wordle:home' %}" class="level-button">ホームへ</a>
     <a href="{% url 'wordle:study' %}" class="level-button">勉強へ</a>
   </div>
+
+<script src="{% static 'js/modal.js' %}"></script>
 </body>
 </html>
