@@ -47,7 +47,7 @@ def quiz(request):
         match = re.search(r'\d+', level)
         if match:
             number = match.group()
-            qs = qs.filter(tag__icontains=number)
+            qs = qs.filter(tags__icontains=number)
 
         word = qs.order_by('?').first()
 
@@ -87,6 +87,7 @@ def quiz(request):
                     'expression': expression,
                     'answer': answer,
                     'attempts': attempts,
+                    'level': level,
                 }
                 for key in ['answer', 'expression', 'attempts']:
                     request.session.pop(key, None)
@@ -98,6 +99,7 @@ def quiz(request):
                     'expression': expression,
                     'answer': answer,
                     'attempts': attempts,
+                    'level': level,
                 }
                 for key in ['answer', 'expression', 'attempts']:
                     request.session.pop(key, None)
@@ -125,7 +127,7 @@ def study(request):
     
     if match:
         number = match.group()
-        words = words.filter(tag__icontains=number)
+        words = words.filter(tags__icontains=number)
 
     if query:
         words = words.filter(Q(expression__icontains=query) | Q(reading__icontains=query))

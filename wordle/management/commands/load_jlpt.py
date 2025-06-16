@@ -16,13 +16,18 @@ class Command(BaseCommand):
         csv_path = options['csv_file']
         df = pd.read_csv(csv_path)
 
+        Word.objects.all().delete()
+        self.stdout.write(self.style.WARNING('기존 Word 데이터가 모두 삭제되었습니다.'))
+
         count = 0
         for _, row in df.iterrows():
             expression = row['expression']
             reading = row['reading']
             meaning = row.get('meaning', '')
-            tags = row.get('normalized_tags', '')            
+            tags = row['tags']            
             length = len(str(reading))
+
+            # print(f"{expression} / {reading} / {tags}")
 
             if not expression or not reading or contains_katakana(reading):
                 continue
@@ -33,7 +38,7 @@ class Command(BaseCommand):
                 meaning=meaning,
                 length=length,
                 active=True,
-                tag=tags
+                tags=tags
             )
             count += 1
 
