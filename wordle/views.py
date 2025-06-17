@@ -64,8 +64,8 @@ def quiz(request):
     expression = request.session.get('expression')
     attempts = request.session.get('attempts', [])
     error = None
-    print(expression)
-    print(answer)
+    print("한자: " + expression)
+    print("정답: " + answer)
 
     if request.method == 'POST':
         guess = request.POST.get('guess', '').strip()
