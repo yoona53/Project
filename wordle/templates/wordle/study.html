@@ -14,6 +14,7 @@
 <body>
     <h1>語彙勉強ページ</h1>
 
+    <!-- 検索フォーム（単語検索 input タグ・レベルドロップダウン） -->
     <form method="get">
         <input type="text" name="q" placeholder="単語検索" value="{{ query }}">
         <select name="level" onchange="this.form.submit()">
@@ -28,42 +29,47 @@
         <button type="button" onclick="resetForm()">クリア</button>
     </form>
     <hr />
-    
+
     <div id="table-mode">
+        <!-- ページング処理 -->
         <div>
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}&level={{ level }}&q={{ query }}">前へ</a>
+            <a href="?page={{ page_obj.previous_page_number }}&level={{ level }}&q={{ query }}">前へ</a>
             {% endif %}
             {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                <strong style="margin: 0 4px;">{{ num }}</strong>
-                {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
-                <a href="?page={{ num }}&level={{ level }}&q={{ query }}">{{ num }}</a>
+            {% if page_obj.number == num %}
+            <strong style="margin: 0 4px;">{{ num }}</strong>
+            {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %} <a
+                href="?page={{ num }}&level={{ level }}&q={{ query }}">{{ num }}</a>
                 {% elif num == 1 %}
                 <a href="?page=1&level={{ level }}&q={{ query }}">1</a>
                 ...
                 {% elif num == page_obj.paginator.num_pages %}
                 ...<a href="?page={{ num }}&level={{ level }}&q={{ query }}">{{ num }}</a>
                 {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
+                {% endfor %}
+                {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}&level={{ level }}&q={{ query }}">次へ</a>
-            {% endif %}
+                {% endif %}
         </div>
+
+        <!-- ブラインド処理をしたい列をチェックボックスで選択 -->
         <div style="margin: 10px 0;">
-            行をブラインドする：
+            列をブラインド：
             <label><input type="checkbox" checked onclick="toggleContent('col-kanji')"> 漢字</label>
             <label><input type="checkbox" checked onclick="toggleContent('col-reading')"> ひらがな</label>
             <label><input type="checkbox" checked onclick="toggleContent('col-meaning')"> 意味</label>
             <label><input type="checkbox" checked onclick="toggleContent('col-level')"> レベル</label>
         </div>
+        <!-- 表示・非表示したい列をチェックボックスで選択 -->
         <div style="margin: 10px 0;">
-            行を消す・表す：
+            列を表示・非表示：
             <label><input type="checkbox" checked onclick="toggleColumn('col-kanji')"> 漢字</label>
             <label><input type="checkbox" checked onclick="toggleColumn('col-reading')"> ひらがな</label>
             <label><input type="checkbox" checked onclick="toggleColumn('col-meaning')"> 意味</label>
             <label><input type="checkbox" checked onclick="toggleColumn('col-level')"> レベル</label>
         </div>
+        <!-- 単語テーブルを出力（20個ずつ） -->
         <table border="1" cellpadding="8">
             <tr>
                 <th class="col-kanji">漢字</th>
@@ -80,28 +86,30 @@
             </tr>
             {% endfor %}
         </table>
+
+        <!-- ページング処理 -->
         <div>
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}&level={{ level }}&q={{ query }}">前へ</a>
+            <a href="?page={{ page_obj.previous_page_number }}&level={{ level }}&q={{ query }}">前へ</a>
             {% endif %}
             {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                <strong style="margin: 0 4px;">{{ num }}</strong>
-                {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
-                <a href="?page={{ num }}&level={{ level }}&q={{ query }}">{{ num }}</a>
+            {% if page_obj.number == num %}
+            <strong style="margin: 0 4px;">{{ num }}</strong>
+            {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %} <a
+                href="?page={{ num }}&level={{ level }}&q={{ query }}">{{ num }}</a>
                 {% elif num == 1 %}
                 <a href="?page=1&level={{ level }}&q={{ query }}">1</a>
                 ...
                 {% elif num == page_obj.paginator.num_pages %}
                 ...<a href="?page={{ num }}&level={{ level }}&q={{ query }}">{{ num }}</a>
                 {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
+                {% endfor %}
+                {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}&level={{ level }}&q={{ query }}">次へ</a>
-            {% endif %}
+                {% endif %}
         </div>
     </div>
-    
+
     <hr />
 
     <div style="margin-top: 20px;">

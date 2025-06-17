@@ -1,92 +1,112 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="ja">
+
 <head>
-  <meta charset="UTF-8">
-  <title>JLPTワードル</title>
-  <link rel="stylesheet" href="{% static 'css/base.css' %}">
-  <link rel="stylesheet" href="{% static 'css/quiz.css' %}">
-  <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+	<meta charset="UTF-8">
+	<title>JLPTワードル</title>
+	<link rel="stylesheet" href="{% static 'css/base.css' %}">
+	<link rel="stylesheet" href="{% static 'css/quiz.css' %}">
+	<link rel="stylesheet" href="{% static 'css/modal.css' %}">
 
-  <script src="{% static 'js/quiz.js' %}"></script>
+	<script src="{% static 'js/quiz.js' %}"></script>
 </head>
+
 <body>
-  <h1>JLPTワードル</h1>
+	<h1>JLPTワードル</h1>
 
-  <button id="howto-btn">❓</button>
-  <!-- 遊び方説明モーダル -->
-<div id="howto-modal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn">&times;</span>
-    <h2>ワードルの遊び方</h2>
-    <ul style="text-align: left; font-size: 14px;">
-      <li>JLPT試験に出る日本語単語を当てるゲームです。</li>
-      <li>提示された文字数を見て答えを想像して日本語を入力してください。</li>
-      <li>答えに文字が含まれると文字が
-        <span style="background-color: #eab308; color: white;">黄色</span>
-        に、文字の場所も一致すると文字が<span style="background-color: #22c55e; color: white;">緑色</span>
-        になります。
-      </li>
-      <li>それらのヒントをもとに答えを当ててください。</li>
-      <li>全部で6回までチャレンジできます。</li>
-      <li>入力は必ず
-        <span style="background-color: #007bff; color: white;">ひらがな</span>
-        で、提示された
-        <span style="background-color: #007bff; color: white;">文字数に合わせて</span>
-        入力してください。
-      </li>
-      <li>同じ読み方の単語が複数ある場合もあります。</li>
-    </ul>
-  </div>
-</div>
-<hr/>
+	<button id="howto-btn">❓</button>
+	<!-- 遊び方説明モーダル -->
+	<div id="howto-modal" class="modal">
+		<div class="modal-content">
+			<span class="close-btn">&times;</span>
+			<h2>ワードルの遊び方</h2>
+			<ul style="text-align: left; font-size: 14px;">
+				<li>JLPT試験に出る日本語単語を当てるゲームです。</li>
+				<li>提示された文字数を見て答えを想像して日本語を入力してください。</li>
+				<li>答えに文字が含まれると文字が
+					<span style="background-color: #eab308; color: white;">黄色</span>
+					に、文字の場所も一致すると文字が<span style="background-color: #22c55e; color: white;">緑色</span>
+					になります。
+				</li>
+				<li>それらのヒントをもとに答えを当ててください。</li>
+				<li>全部で6回までチャレンジできます。</li>
+				<li>入力は必ず
+					<span style="background-color: #007bff; color: white;">ひらがな</span>
+					で、提示された
+					<span style="background-color: #007bff; color: white;">文字数に合わせて</span>
+					入力してください。
+				</li>
+				<li>同じ読み方の単語が複数ある場合もあります。</li>
+			</ul>
+		</div>
+	</div>
 
-  <div class="level-buttons">
-  <a href="{% url 'wordle:quiz' %}?reset=1&level=all" class="level-button {% if level == 'all' %}active{% endif %}">All</a>
-  <a href="{% url 'wordle:quiz' %}?reset=1&level=n1" class="level-button {% if level == 'n1' %}active{% endif %}">N1</a>
-  <a href="{% url 'wordle:quiz' %}?reset=1&level=n2" class="level-button {% if level == 'n2' %}active{% endif %}">N2</a>
-  <a href="{% url 'wordle:quiz' %}?reset=1&level=n3" class="level-button {% if level == 'n3' %}active{% endif %}">N3</a>
-  <a href="{% url 'wordle:quiz' %}?reset=1&level=n4" class="level-button {% if level == 'n4' %}active{% endif %}">N4</a>
-  <a href="{% url 'wordle:quiz' %}?reset=1&level=n5" class="level-button {% if level == 'n5' %}active{% endif %}">N5</a>
-</div>
-<hr/>
-  <!-- 漢字ヒント -->
-  <button id="kanji-button" onclick="btnClick()">漢字ヒントを表示</button>
-  <div id="kanji-div" class="hint-word">漢字：<strong>{{ expression }}</strong></div>
-  <p>ひらがな <strong>{{ answer | length }}</strong>文字</p>
-  <p>残り <strong>{{ remaining }}</strong> 回</p>
+	<hr />
 
-  {% if error %}
-    <p class="error">{{ error }}</p>
-  {% endif %}
+	<!-- レベル選択ボタン（すべて・N1・N2・N3・N4・N5） -->
+	<div class="level-buttons">
+		<a href="{% url 'wordle:quiz' %}?reset=1&level=all"
+			class="level-button {% if level == 'all' %}active{% endif %}">All</a>
+		<a href="{% url 'wordle:quiz' %}?reset=1&level=n1"
+			class="level-button {% if level == 'n1' %}active{% endif %}">N1</a>
+		<a href="{% url 'wordle:quiz' %}?reset=1&level=n2"
+			class="level-button {% if level == 'n2' %}active{% endif %}">N2</a>
+		<a href="{% url 'wordle:quiz' %}?reset=1&level=n3"
+			class="level-button {% if level == 'n3' %}active{% endif %}">N3</a>
+		<a href="{% url 'wordle:quiz' %}?reset=1&level=n4"
+			class="level-button {% if level == 'n4' %}active{% endif %}">N4</a>
+		<a href="{% url 'wordle:quiz' %}?reset=1&level=n5"
+			class="level-button {% if level == 'n5' %}active{% endif %}">N5</a>
+	</div>
 
-  {% if remaining > 0 %}
-    <form method="POST">
-      {% csrf_token %}
-      <input type="text" name="guess" placeholder="ひらがなで入力" required autofocus>
-      <button type="submit">送信</button>
-    </form>
-  {% else %}
-    <p>試行回数を使い切りました。正解は「{{ answer }}」です。</p>
-  {% endif %}
+	<hr />
 
-  <h2>これまでの試行</h2>
-  {% for attempt in attempts %}
-    <div>
-      {% for ch, color in attempt %}
-        <div class="tile {{ color }}">{{ ch }}</div>
-      {% endfor %}
-    </div>
-  {% endfor %}
+	<!-- 漢字ヒントの表示・非表示 -->
+	<button id="kanji-button" onclick="btnClick()">漢字ヒントを表示</button>
+	<div id="kanji-div" class="hint-word">漢字：<strong>{{ expression }}</strong></div>
 
-  <hr />
+	<!-- 正解の文字数を表示 -->
+	<p>ひらがな <strong>{{ answer | length }}</strong>文字</p>
+	<!-- 残りチャレンジ回数を表示 -->
+	<p>残り <strong>{{ remaining }}</strong> 回</p>
 
-  <div class="button-area">
-    <a href="{% url 'wordle:quiz' %}?reset=1&level={{ level }}" class="level-button">もう一度</a>
-    <a href="{% url 'wordle:home' %}" class="level-button">ホームへ</a>
-    <a href="{% url 'wordle:study' %}" class="level-button">勉強へ</a>
-  </div>
+	<!-- ひらがな以外の入力・文字数が合わないなど 正しくない入力のエラーメッセージを表示 -->
+	{% if error %}
+	<p class="error">{{ error }}</p>
+	{% endif %}
 
-<script src="{% static 'js/modal.js' %}"></script>
+	<!-- 正解入力フォーム -->
+	{% if remaining > 0 %}
+	<form method="POST">
+		{% csrf_token %}
+		<input type="text" name="guess" placeholder="ひらがなで入力" required autofocus>
+		<button type="submit">送信</button>
+	</form>
+	{% else %}
+	<p>試行回数を使い切りました。正解は「{{ answer }}」です。</p>
+	{% endif %}
+
+	<!-- これまでの入力リスト（green, yellow, grayの色でヒントを表す） -->
+	<h2>これまでの試行</h2>
+	{% for attempt in attempts %}
+	<div>
+		{% for ch, color in attempt %}
+		<div class="tile {{ color }}">{{ ch }}</div>
+		{% endfor %}
+	</div>
+	{% endfor %}
+
+	<hr />
+
+	<div class="button-area">
+		<a href="{% url 'wordle:quiz' %}?reset=1&level={{ level }}" class="level-button">もう一度</a>
+		<a href="{% url 'wordle:home' %}" class="level-button">ホームへ</a>
+		<a href="{% url 'wordle:study' %}" class="level-button">勉強へ</a>
+	</div>
+
+	<!-- モーダルのJavaScriptファイル（headでは通用しない） -->
+	<script src="{% static 'js/modal.js' %}"></script>
 </body>
+
 </html>

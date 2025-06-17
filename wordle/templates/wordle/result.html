@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>JLPTワードル – 結果</title>
+    <title>JLPTワードル - 結果</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/quiz.css' %}">
 
@@ -12,14 +12,18 @@
 
 <body>
 
+    <!-- 正解・不正解によってタイトルが異なる -->
     {% if correct %}
     <h1>🎉 正解！ 🎉</h1>
     {% else %}
     <h1>❌ 不正解！</h1>
     {% endif %}
 
+    <!-- 正解の漢字を表示 -->
     <p>漢字：<strong>{{ expression }}</strong></p>
+    <!-- 正解のひらがなを表示 -->
     <p>答え：<strong>{{ answer }}</strong></p>
+    <!-- ユーザーが入力した単語のリストを表示 -->
     <h2>これまでの結果</h2>
     {% for attempt in attempts %}
     <div>
@@ -31,7 +35,7 @@
 
     <br>
     <hr />
-    
+
     <a href="{% url 'wordle:quiz' %}?reset=1&level={{ level }}" class="a-button">もう一度</a>
     <a href="{% url 'wordle:home' %}" class="a-button">ホームへ</a>
     <a href="{% url 'wordle:study' %}" class="a-button">勉強へ</a>
